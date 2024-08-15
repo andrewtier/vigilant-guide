@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import {useState, useEffect} from "react";
 
 import './App.css';
 import SearchICON from './search.svg';
@@ -6,7 +6,7 @@ import MovieCard from "./MovieCard";
 
 const API_URL = 'http://www.omdbapi.com?apikey=4d189f6e';
 
-const movie1 = 
+const unused = 
     {
         "Title": "Cars 2",
         "Year": "2011",
@@ -16,12 +16,12 @@ const movie1 =
     }
 
 const App = () => {
-
+    const [movies, setMovies] = useState([]);
     const searchMovies = async (title) => {
         const response = await fetch(`${API_URL}&s=${title}`);
         const data = await response.json();
 
-        console.log(data);
+        setMovies(data.Search);
     }
     useEffect(() => {
         searchMovies('Cars 2');
@@ -42,9 +42,21 @@ const App = () => {
                     onClick={() => {}}
                 />
              </div>
-             <div className="container">
-                <MovieCard movie1={movie1} />
-             </div>
+
+            {
+                movies?.length > 0
+                    ? (
+                    <div className="container">
+                        {movies.map((movie) => (
+                            <MovieCard movie={movie}/>
+                        ))}
+                    </div>
+                    ) : (
+                        <div className="empty">
+                            <h2>No movies found</h2>
+                         </div>
+                    )       
+            }
         </div>
     );
 }
